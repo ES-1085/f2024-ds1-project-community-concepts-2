@@ -11,13 +11,15 @@ library(broom)
 
 ## 1. Introduction
 
-Community Concepts, INC. (CCI) is an agency serving three counties in the state of Maine (Androscoggin, Franklin, and Oxford.) The agency helps provide stability and self-sufficiency through a variety of programs directed towards children, families, and households, such as early childhood education, housing, financial assistance, and energy assistance. 
+**Community Concepts, INC. (CCI)** is an agency serving three counties in the state of Maine (Androscoggin, Franklin, and Oxford.) The agency helps provide stability and self-sufficiency through a variety of programs directed towards children, families, and households, such as early childhood education, housing, financial assistance, and energy assistance. 
 
-In this work, 
-How does funding affect Children Services programs offered by CCI such as Head Start and Early Head Start correlate with program targets, efficiency, and overall trends in Androscoggin, Franklin, and Oxford Counties in Maine? 
+In this work, we will be analyzing the efficiency of CCI's Child Services programs. These programs include **'Headstart Children Program'** and **'Early Headstart Children Program'**. The analysis will evaluate the total amount of USD invested in each program type by CCI, based on 2024 Town Campaign data, and attempt to find correlation between investment in each program and the efficiency (proximity to target set) of each program. Evaluation of targets will be collected through data on CCI's fiscal year 2024 Key Performance Indicators of Total Agency. 
 
 
-Text goes here. Refer to the Markdown Quick Reference: Help -> Markdown Quick Reference. 
+### Research Question:
+
+**How does funding and investment affect Children Services programs offered by Community Concepts such as Headstart and Early Headstart correlate with program targets, efficiency, and overall trends in Androscoggin, Franklin, and Oxford Counties in Maine?**
+
 
 ## 2. Data
 
