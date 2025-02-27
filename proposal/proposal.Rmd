@@ -11,6 +11,10 @@ library(broom)
 
 ## 1. Introduction
 
+Community Concepts, INC. (CCI) is an agency serving three counties in the state of Maine (Androscoggin, Franklin, and Oxford.) The agency helps provide stability and self-sufficiency through a variety of programs directed towards children, families, and households, such as early childhood education, housing, financial assistance, and energy assistance.
+
+In this work, 
+
 Text goes here. Refer to the Markdown Quick Reference: Help -> Markdown Quick Reference. 
 
 ## 2. Data
