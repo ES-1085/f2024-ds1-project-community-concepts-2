@@ -374,6 +374,14 @@ and attempt to find correlation between investment in each program and
 the efficiency (proximity to target set) of each program. Evaluation of
 targets will be collected through data on CCI’s fiscal year 2024 Key
 Performance Indicators of Total Agency.</p>
+<p>Through finding correlations between the investment made in each
+porgram and that program’s efficiency, we will have a better
+understanding of the ways in which investment can cause efficiency, or
+whether Community Concept’s investments are no necessarily directly
+causing efficiency. This project aims to understand the innerworkings of
+Community Concept’s investment strategies, and can be a small glipmse of
+insight as to where CCI should continue or adjust investments in the
+future.</p>
 <div id="research-question" class="section level3">
 <h3>Research Question:</h3>
 <p><strong>How does funding and investment affect Children Services
@@ -384,8 +392,60 @@ in Androscoggin, Franklin, and Oxford Counties in Maine?</strong></p>
 </div>
 <div id="data" class="section level2">
 <h2>2. Data</h2>
-<p>Text goes here.</p>
-<pre class="r"><code># Code goes here</code></pre>
+<p>Our research question will be answered through the analysis of the
+folling variables:</p>
+<ul>
+<li><code>program</code>: Whether it is head start or early head
+start</li>
+<li><code>month</code>: month of record</li>
+<li><code>monthly_enroll</code>: monthly enrollment count</li>
+<li><code>cumul_enroll</code>: Cumulative enrollment</li>
+<li><code>wait_income_eligible</code>: wait list for income
+eligible</li>
+<li><code>applications</code>: applications processed within 10
+days</li>
+<li><code>avg_day_process</code>: Average number of days it takes for an
+application to be processed into enroll</li>
+<li><code>total_children_served</code>: total number of children
+currently served in all of children’s services</li>
+<li><code>attendence</code>: attendence percent</li>
+</ul>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+#FY24_KPI_Fresh &lt;- read_excel(&quot;data/Copy of FY24 Sept KPIs - Total Agency.xlsx&quot;)
+#View(FY24_KPI_Fresh)
+#colnames(FY24_KPI_Fresh)
+
+kpi_data &lt;- read_excel(&quot;/cloud/project/data/Copy of FY24 Sept KPIs - Total Agency.xlsx&quot;)</code></pre>
+<pre><code>## New names:
+## • `` -&gt; `...2`
+## • `` -&gt; `...18`
+## • `` -&gt; `...19`</code></pre>
+<pre class="r"><code>#view(kpi_data)
+library(tidyr)
+library(dplyr)
+
+kpi_data_long &lt;- kpi_data %&gt;%
+  pivot_longer(cols = -`Children&#39;s Services`, 
+               names_to = &quot;Month&quot;, 
+               values_to = &quot;Value&quot;)
+
+kpi_data_wide &lt;- kpi_data_long %&gt;%
+  pivot_wider(names_from = `Children&#39;s Services`, 
+              values_from = Value)</code></pre>
+<pre><code>## Warning: Values from `Value` are not uniquely identified; output will contain list-cols.
+## • Use `values_fn = list` to suppress this warning.
+## • Use `values_fn = {summary_fun}` to summarise duplicates.
+## • Use the following dplyr code to identify duplicates.
+##   {data} |&gt;
+##   dplyr::summarise(n = dplyr::n(), .by = c(Month, `Children&#39;s Services`)) |&gt;
+##   dplyr::filter(n &gt; 1L)</code></pre>
+<pre class="r"><code>kpi_data &lt;- kpi_data %&gt;%
+  rename(
+    Program = `Children&#39;s Services`
+  )
+
+view(kpi_data)</code></pre>
 </div>
 <div id="data-analysis-plan" class="section level2">
 <h2>3. Data analysis plan</h2>

@@ -15,6 +15,8 @@ library(broom)
 
 In this work, we will be analyzing the efficiency of CCI's Child Services programs. These programs include **'Headstart Children Program'** and **'Early Headstart Children Program'**. The analysis will evaluate the total amount of USD invested in each program type by CCI, based on 2024 Town Campaign data, and attempt to find correlation between investment in each program and the efficiency (proximity to target set) of each program. Evaluation of targets will be collected through data on CCI's fiscal year 2024 Key Performance Indicators of Total Agency. 
 
+Through finding correlations between the investment made in each porgram and that program's efficiency, we will have a better understanding of the ways in which investment can cause efficiency, or whether Community Concept's investments are no necessarily directly causing efficiency. This project aims to understand the innerworkings of Community Concept's investment strategies, and can be a small glipmse of insight as to where CCI should continue or adjust investments in the future. 
+
 
 ### Research Question:
 
@@ -23,10 +25,61 @@ In this work, we will be analyzing the efficiency of CCI's Child Services progra
 
 ## 2. Data
 
-Text goes here.
+Our research question will be answered through the analysis of the folling variables:
+
+- `program`: Whether it is head start or early head start
+- `month`: month of record
+- `monthly_enroll`: monthly enrollment count
+- `cumul_enroll`: Cumulative enrollment
+- `wait_income_eligible`: wait list for income eligible
+- `applications`: applications processed within 10 days
+- `avg_day_process`: Average number of days it takes for an application to be processed into enroll
+- `total_children_served`: total number of children currently served in all of children's services
+- `attendence`: attendence percent
+
+
+In order to gain access to these variables for proper use, we must clean and effectively merge the Fiscal Year 2024 Key Perfomance Indicators data set with the Fiscal Year 24 Town Campaign Data, which includes all town names and the amount of investments raised in each campaign. 
+
+The Town Campaign Data also must me narrowed down to only towns found in Androscoggin, Franklin, and Oxford counties, allowing for analysis of the efficiency in just the towns in which CCI covers, and therefore would recieve investment through.
+
+The KPI set must be pivoted, in order for 'program' to be a column and 'month' to appear as rows.
+
+Once the data is merged and cleaned, analysis and data visualization will help understand how funding and investment in Children Services programs offered by CCI correlate with program targets, efficiency, and overall trends.
+
 
 ```{r}
-# Code goes here
+library(tidyverse)
+library(readxl)
+#FY24_KPI_Fresh <- read_excel("data/Copy of FY24 Sept KPIs - Total Agency.xlsx")
+#View(FY24_KPI_Fresh)
+#colnames(FY24_KPI_Fresh)
+
+kpi_data <- read_excel("/cloud/project/data/Copy of FY24 Sept KPIs - Total Agency.xlsx")
+
+#view(kpi_data)
+library(tidyr)
+library(dplyr)
+
+kpi_data_long <- kpi_data %>%
+  pivot_longer(cols = -`Children's Services`, 
+               names_to = "Month", 
+               values_to = "Value")
+
+kpi_data_wide <- kpi_data_long %>%
+  pivot_wider(names_from = `Children's Services`, 
+              values_from = Value)
+
+
+kpi_data <- kpi_data %>%
+  rename(
+    Program = `Children's Services`
+  )
+
+view(kpi_data)
+
+
+
+
 ```
 
 ## 3. Data analysis plan
