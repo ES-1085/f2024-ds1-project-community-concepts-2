@@ -87,12 +87,16 @@ view(kpi_data)
 
 ## 3. Data analysis plan
 
-Text goes here.
-
+To effectively assess performance, we compare actual results against predefined goals across various Key Performance Indicators (KPIs). First, we prepare the data by creating a new column that calculates the percentage of the goal achieved, allowing for a standardized comparison across all metrics. Next, we visualize the data using bar plots or line charts to illustrate the differences between actual performance and target values, making it easier to identify trends and gaps. Finally, we conduct a statistical analysis to determine the average percentage of goal achievement, highlighting areas of strong performance as well as those that fall short. This approach provides a clear understanding of overall success while pinpointing specific areas that require strategic improvements.
 
 ```{r}
-# Code goes here
-```
+# Goal Achievement for Head Start Children Enrolled (Goal is 266)
+data <- data %>%
+  mutate(goal_achievement = headstart /266 * 100)
+
+ggplot(data, aes(x=month, y=goal_achievement)) +
+  geom_bar(stat="identity") +
+  labs(title="Goal Achievement for Head Start Children Enrolled", x="Month", y="Percentage of Goal Achieved")```
 
 
 ## 4. Data Ethics Review
