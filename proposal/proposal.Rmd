@@ -15,12 +15,16 @@ library(broom)
 
 In this work, we will be analyzing the efficiency of CCI's Child Services programs. These programs include **'Headstart Children Program'** and **'Early Headstart Children Program'**. The analysis will evaluate the total amount of USD invested in each program type by CCI, based on 2024 Town Campaign data, and attempt to find correlation between investment in each program and the efficiency (proximity to target set) of each program. Evaluation of targets will be collected through data on CCI's fiscal year 2024 Key Performance Indicators of Total Agency. 
 
-Through finding correlations between the investment made in each porgram and that program's efficiency, we will have a better understanding of the ways in which investment can cause efficiency, or whether Community Concept's investments are no necessarily directly causing efficiency. This project aims to understand the innerworkings of Community Concept's investment strategies, and can be a small glipmse of insight as to where CCI should continue or adjust investments in the future. 
+Through finding correlations between the investment made in each program and that program's efficiency, we will have a better understanding of the ways in which investment can cause efficiency, or whether Community Concept's investments are not necessarily directly causing efficiency. This project aims to understand the inner workings of Community Concept's investment strategies, and can be a small glimpse of insight as to where CCI should continue or adjust investments in the future. 
 
 
 ### Research Question:
 
 **How does funding and investment affect Children Services programs offered by Community Concepts such as Headstart and Early Headstart correlate with program targets, efficiency, and overall trends in Androscoggin, Franklin, and Oxford Counties in Maine?**
+
+or
+
+**How does funding for Community Concepts' Head Start and Early Head Start programs correlate with program efficiency and goal achievement in Androscoggin, Franklin, and Oxford Counties, Maine?**
 
 
 ## 2. Data
@@ -80,9 +84,7 @@ view(kpi_data)
 
 
 ```
-```{r}
 
-```
 
 
 ## 3. Data analysis plan
@@ -91,12 +93,15 @@ To effectively assess performance, we compare actual results against predefined 
 
 ```{r}
 # Goal Achievement for Head Start Children Enrolled (Goal is 266)
-data <- data %>%
-  mutate(goal_achievement = headstart /266 * 100)
+#Example visualization
+#data <- data %>%
+ # mutate(goal_achievement = headstart /266 * 100)
 
-ggplot(data, aes(x=month, y=goal_achievement)) +
-  geom_bar(stat="identity") +
-  labs(title="Goal Achievement for Head Start Children Enrolled", x="Month", y="Percentage of Goal Achieved")```
+#ggplot(data, aes(x=month, y=goal_achievement)) +
+ # geom_bar(stat="identity") +
+  #labs(title="Goal Achievement for Head Start Children Enrolled", x="Month", y="Percentage of Goal Achieved")`
+
+```
 
 
 ## 4. Data Ethics Review

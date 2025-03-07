@@ -375,12 +375,12 @@ the efficiency (proximity to target set) of each program. Evaluation of
 targets will be collected through data on CCI’s fiscal year 2024 Key
 Performance Indicators of Total Agency.</p>
 <p>Through finding correlations between the investment made in each
-porgram and that program’s efficiency, we will have a better
+program and that program’s efficiency, we will have a better
 understanding of the ways in which investment can cause efficiency, or
-whether Community Concept’s investments are no necessarily directly
-causing efficiency. This project aims to understand the innerworkings of
-Community Concept’s investment strategies, and can be a small glipmse of
-insight as to where CCI should continue or adjust investments in the
+whether Community Concept’s investments are not necessarily directly
+causing efficiency. This project aims to understand the inner workings
+of Community Concept’s investment strategies, and can be a small glimpse
+of insight as to where CCI should continue or adjust investments in the
 future.</p>
 <div id="research-question" class="section level3">
 <h3>Research Question:</h3>
@@ -388,6 +388,11 @@ future.</p>
 programs offered by Community Concepts such as Headstart and Early
 Headstart correlate with program targets, efficiency, and overall trends
 in Androscoggin, Franklin, and Oxford Counties in Maine?</strong></p>
+<p>or</p>
+<p><strong>How does funding for Community Concepts’ Head Start and Early
+Head Start programs correlate with program efficiency and goal
+achievement in Androscoggin, Franklin, and Oxford Counties,
+Maine?</strong></p>
 </div>
 </div>
 <div id="data" class="section level2">
@@ -395,21 +400,35 @@ in Androscoggin, Franklin, and Oxford Counties in Maine?</strong></p>
 <p>Our research question will be answered through the analysis of the
 folling variables:</p>
 <ul>
-<li><code>program</code>: Whether it is head start or early head
-start</li>
-<li><code>month</code>: month of record</li>
-<li><code>monthly_enroll</code>: monthly enrollment count</li>
-<li><code>cumul_enroll</code>: Cumulative enrollment</li>
+<li><code>id</code>: assigned ID</li>
+<li><code>headstart</code>: headstart enrollment count</li>
+<li><code>early_headstart</code>: early headstart enrollment count</li>
+<li><code>monthly_enroll</code>: Cumulative enrollment</li>
 <li><code>wait_income_eligible</code>: wait list for income
 eligible</li>
 <li><code>applications</code>: applications processed within 10
 days</li>
-<li><code>avg_day_process</code>: Average number of days it takes for an
-application to be processed into enroll</li>
-<li><code>total_children_served</code>: total number of children
-currently served in all of children’s services</li>
-<li><code>attendence</code>: attendence percent</li>
+<li><code>hs_wl_incomes</code>: HS Wait List for Income Eligible</li>
+<li><code>hs_wl_over</code>: HS Wait List for Over Income</li>
+<li><code>ehs_wl_incomes</code>: Early HS Wait List for Income
+Eligible</li>
+<li><code>ehs_wl_over</code>: Early HS Wait List for Over Income</li>
 </ul>
+<p>In order to gain access to these variables for proper use, we must
+clean and effectively merge the Fiscal Year 2024 Key Perfomance
+Indicators data set with the Fiscal Year 24 Town Campaign Data, which
+includes all town names and the amount of investments raised in each
+campaign.</p>
+<p>The Town Campaign Data also must me narrowed down to only towns found
+in Androscoggin, Franklin, and Oxford counties, allowing for analysis of
+the efficiency in just the towns in which CCI covers, and therefore
+would recieve investment through.</p>
+<p>The KPI set must be pivoted, in order for ‘program’ to be a column
+and ‘month’ to appear as rows.</p>
+<p>Once the data is merged and cleaned, analysis and data visualization
+will help understand how funding and investment in Children Services
+programs offered by CCI correlate with program targets, efficiency, and
+overall trends.</p>
 <pre class="r"><code>library(tidyverse)
 library(readxl)
 #FY24_KPI_Fresh &lt;- read_excel(&quot;data/Copy of FY24 Sept KPIs - Total Agency.xlsx&quot;)
@@ -449,8 +468,26 @@ view(kpi_data)</code></pre>
 </div>
 <div id="data-analysis-plan" class="section level2">
 <h2>3. Data analysis plan</h2>
-<p>Text goes here.</p>
-<pre class="r"><code># Code goes here</code></pre>
+<p>To effectively assess performance, we compare actual results against
+predefined goals across various Key Performance Indicators (KPIs).
+First, we prepare the data by creating a new column that calculates the
+percentage of the goal achieved, allowing for a standardized comparison
+across all metrics. Next, we visualize the data using bar plots or line
+charts to illustrate the differences between actual performance and
+target values, making it easier to identify trends and gaps. Finally, we
+conduct a statistical analysis to determine the average percentage of
+goal achievement, highlighting areas of strong performance as well as
+those that fall short. This approach provides a clear understanding of
+overall success while pinpointing specific areas that require strategic
+improvements.</p>
+<pre class="r"><code># Goal Achievement for Head Start Children Enrolled (Goal is 266)
+#Example visualization
+#data &lt;- data %&gt;%
+ # mutate(goal_achievement = headstart /266 * 100)
+
+#ggplot(data, aes(x=month, y=goal_achievement)) +
+ # geom_bar(stat=&quot;identity&quot;) +
+  #labs(title=&quot;Goal Achievement for Head Start Children Enrolled&quot;, x=&quot;Month&quot;, y=&quot;Percentage of Goal Achieved&quot;)`</code></pre>
 </div>
 <div id="data-ethics-review" class="section level2">
 <h2>4. Data Ethics Review</h2>
