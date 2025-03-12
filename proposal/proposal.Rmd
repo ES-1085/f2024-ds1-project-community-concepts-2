@@ -80,7 +80,7 @@ kpi_data <- kpi_data %>%
     Program = `Children's Services`
   )
 
-view(kpi_data)
+glim(kpi_data)
 
 
 ```
