@@ -56,7 +56,8 @@ Once the data is merged and cleaned, analysis and data visualization will help u
 library(tidyverse)
 library(readxl)
 
-kpi_data <- read_excel("/cloud/project/data/Copy of FY24 Sept KPIs - Total Agency.xlsx")
+kpi_data <- read_excel("/cloud/project/data/FY24 Sept KPIs - Total Agency.xlsx")
+
 
 #view(kpi_data)
 library(tidyr)
