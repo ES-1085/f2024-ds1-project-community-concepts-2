@@ -52,41 +52,160 @@ The KPI set must be pivoted, in order for 'program' to be a column and 'month' t
 Once the data is merged and cleaned, analysis and data visualization will help understand how funding and investment in Children Services programs offered by CCI correlate with program targets, efficiency, and overall trends.
 
 
-```{r}
+```{r town import}
 library(tidyverse)
+
+
+
 library(readxl)
-<<<<<<< HEAD
+FY24_Town_Campaign_Data_1_ <- read_excel("/cloud/project/data/FY24 Town Campaign Data (1).xlsx",
 
-kpi_data <- read_excel("/cloud/project/data/FY24 Sept KPIs - Total Agency.xlsx")
-
-=======
-#FY24_KPI_Fresh <- read_excel("data/FY24 Sept KPIs - Total Agency.xlsx")
-#View(FY24_KPI_Fresh)
-#colnames(FY24_KPI_Fresh)
-
-kpi_data <- read_excel("/cloud/project/data/FY24 Sept KPIs - Total Agency.xlsx")
->>>>>>> 3d615c21e8ee6f52c647d89498874443c056c6b4
-
-#view(kpi_data)
-library(tidyr)
-library(dplyr)
-
-kpi_data <- kpi_data |>
-  filter(Assumptions %in% c("Early Head Start Children Enrolled (Goal 148)")) |> #Add just the categories you want to look at here. 
-  pivot_longer(cols = Oct:Sept, 
-               names_to = "Month", 
-               values_to = "Number of Children") # You could give this a more informative name e.g. "Number of Children" if that is what it is. 
-
-
-kpi_data <- kpi_data %>%
-  rename(
-    Program = `Children's Services`
-  )
-
-glimpse(kpi_data)
+    col_types = c("text", "skip", "skip", 
+        "skip", "skip", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "skip", "skip", 
+        "text", "text", "text", "text", "text", 
+        "text", "text", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "text"))
+View(FY24_Town_Campaign_Data_1_)
 
 
 ```
+
+```{r town column cleaning}
+Town_data <- FY24_Town_Campaign_Data_1_
+
+colnames(Town_data) <- as.character(unlist(Town_data[1, ]))
+Town_data <- Town_data[-1, ]
+Town_data <- Town_data[-(2:7), ]
+Town_data <- Town_data[, -2]
+ 
+ 
+colnames(Town_data)[2] <- "Headstart_individuals"
+colnames(Town_data)[3] <- "Headstart_investments"
+
+colnames(Town_data)[4] <- "EHS_individuals"
+colnames(Town_data)[5] <- "EHS_investments"
+
+colnames(Town_data)[6] <- "Nutrition_individuals"
+colnames(Town_data)[7] <- "Nutrition_investments"
+
+colnames(Town_data)[8] <- "Total"
+
+```
+
+```{r town deleting zeros}
+
+
+Town_data[, c("Headstart_individuals", "Headstart_investments", 
+              "EHS_individuals", "EHS_investments", 
+              "Nutrition_individuals", "Nutrition_investments")] <- 
+  lapply(Town_data[, c("Headstart_individuals", "Headstart_investments", 
+                       "EHS_individuals", "EHS_investments", 
+                       "Nutrition_individuals", "Nutrition_investments")], 
+         function(x) replace(x, is.na(x), 0))
+
+Town_data[, c("Headstart_individuals", "Headstart_investments",
+              "EHS_individuals", "EHS_investments",
+              "Nutrition_individuals", "Nutrition_investments")] <-
+  lapply(Town_data[, c("Headstart_individuals", "Headstart_investments",
+                       "EHS_individuals", "EHS_investments",
+                       "Nutrition_individuals", "Nutrition_investments")], as.numeric)
+
+Town_data <- Town_data[rowSums(Town_data[, c("Headstart_individuals", "Headstart_investments",
+                                              "EHS_individuals", "EHS_investments",
+                                              "Nutrition_individuals", "Nutrition_investments")]) != 0, ]
+
+Town_data <- Town_data[-c(1, nrow(Town_data)), ]
+
+```
+
+```{r town totals sheet}
+
+headstart_individuals_total <- sum(Town_data$Headstart_individuals)
+headstart_investments_total <- sum(Town_data$Headstart_investments)
+
+ehs_individuals_total <- sum(Town_data$EHS_individuals)
+ehs_investments_total <- sum(Town_data$EHS_investments)
+
+nutrition_individuals_total <- sum(Town_data$Nutrition_individuals)
+nutrition_investments_total <- sum(Town_data$Nutrition_investments)
+
+town_data_total <- data.frame(
+  Headstart_individuals = headstart_individuals_total,
+  Headstart_investments = headstart_investments_total,
+  EHS_individuals = ehs_individuals_total,
+  EHS_investments = ehs_investments_total,
+  Nutrition_individuals = nutrition_individuals_total,
+  Nutrition_investments = nutrition_investments_total
+)
+
+
+library(tidyr)
+
+town_data_total <- data.frame(
+  Program = c("Headstart", "Headstart", "EHS", "EHS", "Nutrition", "Nutrition"),
+  Type = c("Individuals", "Investments", "Individuals", "Investments", "Individuals", "Investments"),
+  Total = c(
+    sum(Town_data$Headstart_individuals),
+    sum(Town_data$Headstart_investments),
+    sum(Town_data$EHS_individuals),
+    sum(Town_data$EHS_investments),
+    sum(Town_data$Nutrition_individuals),
+    sum(Town_data$Nutrition_investments)
+  )
+)
+
+town_data_total_long <- pivot_longer(town_data_total, 
+                                     cols = c("Total"), 
+                                     names_to = "Metric", 
+                                     values_to = "Value")
+
+print(town_data_total_long)
+
+
+```
+```{r town plots, investments and individuals}
+
+library(scales)
+
+
+town_data_total_long$Program <- factor(town_data_total_long$Program, levels = c("Headstart", "EHS", "Nutrition"))
+
+town_data_individuals <- town_data_total_long %>% filter(Type == "Individuals")
+town_data_investments <- town_data_total_long %>% filter(Type == "Investments")
+
+
+ggplot(town_data_individuals, aes(x = Program, y = Value, fill = Program)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  labs(
+
+    title = "Total Individuals by Program",
+    x = "Program",
+    y = "Total Individuals"
+  ) +
+  theme_minimal() +
+  scale_fill_manual(values = c("Headstart" = "skyblue", "EHS" = "lightgreen", "Nutrition" = "orange"))
+
+ggplot(town_data_investments, aes(x = Program, y = Value, fill = Program)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  labs(
+    title = "Total Investments by Program",
+    x = "Program",
+    y = "Total Investments"
+  ) +
+  theme_minimal() +
+  scale_fill_manual(values = c("Headstart" = "skyblue", "EHS" = "lightgreen", "Nutrition" = "orange")) +
+  scale_y_continuous(labels = label_dollar(scale = 1))  
+
+
+```
+
+
 
 
 
