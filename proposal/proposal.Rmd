@@ -239,9 +239,11 @@ To effectively assess performance, we compare actual results against predefined 
 
 ```{r}
 # Goal Achievement for Head Start Children Enrolled (Goal is 266)
+children_values <- df$`Value`
+
 #Example visualization
 kpi_data <- kpi_data %>%
- mutate(goal_achievement = value /266 * 100)
+ mutate(goal_achievement = children_values /266 * 100)
 
 ggplot(data, aes(x=month, y=goal_achievement)) +
  geom_bar(stat="identity") +
