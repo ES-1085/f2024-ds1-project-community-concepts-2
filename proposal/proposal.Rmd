@@ -55,22 +55,27 @@ Once the data is merged and cleaned, analysis and data visualization will help u
 ```{r}
 library(tidyverse)
 library(readxl)
+<<<<<<< HEAD
 
 kpi_data <- read_excel("/cloud/project/data/FY24 Sept KPIs - Total Agency.xlsx")
 
+=======
+#FY24_KPI_Fresh <- read_excel("data/FY24 Sept KPIs - Total Agency.xlsx")
+#View(FY24_KPI_Fresh)
+#colnames(FY24_KPI_Fresh)
+
+kpi_data <- read_excel("/cloud/project/data/FY24 Sept KPIs - Total Agency.xlsx")
+>>>>>>> 3d615c21e8ee6f52c647d89498874443c056c6b4
 
 #view(kpi_data)
 library(tidyr)
 library(dplyr)
 
-kpi_data_long <- kpi_data %>%
-  pivot_longer(cols = -`Children's Services`, 
+kpi_data <- kpi_data |>
+  filter(Assumptions %in% c("Early Head Start Children Enrolled (Goal 148)")) |> #Add just the categories you want to look at here. 
+  pivot_longer(cols = Oct:Sept, 
                names_to = "Month", 
-               values_to = "Value")
-
-kpi_data_wide <- kpi_data_long %>%
-  pivot_wider(names_from = `Children's Services`, 
-              values_from = Value)
+               values_to = "Number of Children") # You could give this a more informative name e.g. "Number of Children" if that is what it is. 
 
 
 kpi_data <- kpi_data %>%
@@ -78,7 +83,7 @@ kpi_data <- kpi_data %>%
     Program = `Children's Services`
   )
 
-view(kpi_data)
+glimpse(kpi_data)
 
 
 ```
@@ -92,12 +97,12 @@ To effectively assess performance, we compare actual results against predefined 
 ```{r}
 # Goal Achievement for Head Start Children Enrolled (Goal is 266)
 #Example visualization
-#data <- data %>%
- # mutate(goal_achievement = headstart /266 * 100)
+kpi_data <- kpi_data %>%
+ mutate(goal_achievement = value /266 * 100)
 
-#ggplot(data, aes(x=month, y=goal_achievement)) +
- # geom_bar(stat="identity") +
-  #labs(title="Goal Achievement for Head Start Children Enrolled", x="Month", y="Percentage of Goal Achieved")`
+ggplot(data, aes(x=month, y=goal_achievement)) +
+ geom_bar(stat="identity") +
+  labs(title="Goal Achievement for Head Start Children Enrolled", x="Month", y="Percentage of Goal Achieved")`
 
 ```
 
