@@ -205,8 +205,32 @@ ggplot(town_data_investments, aes(x = Program, y = Value, fill = Program)) +
 
 ```
 
+```{r KPI Import}
+library(readxl)
+FY24_Sept_KPIs_Total_Agency_1_ <- read_excel("/cloud/project/data/FY24 Sept KPIs - Total Agency (1).xlsx", 
+    sheet = "Childrens ", col_types = c("text", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "skip", "skip", 
+        "skip", "skip", "skip", "skip"))
+View(FY24_Sept_KPIs_Total_Agency_1_)
+```
 
+```{r KPI colnames}
+KPI_data <- FY24_Sept_KPIs_Total_Agency_1_  
 
+colnames(KPI_data)[1] <- "Program"  
+
+colnames(KPI_data)[13] <- "Sept"
+
+colnames(KPI_data)[14] <- "Total"
+
+View(KPI_data)  
+
+```
 
 
 ## 3. Data analysis plan
