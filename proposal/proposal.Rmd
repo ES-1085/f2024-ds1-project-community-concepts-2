@@ -216,17 +216,21 @@ FY24_Sept_KPIs_Total_Agency_1_ <- read_excel("/cloud/project/data/FY24 Sept KPIs
         "numeric", "skip", "skip", "skip", 
         "skip", "skip", "skip", "skip", "skip", 
         "skip", "skip", "skip", "skip"))
+FY24_Sept_KPIs_Total_Agency_1_ <- t(FY24_Sept_KPIs_Total_Agency_1_)
+colnames(FY24_Sept_KPIs_Total_Agency_1_) <- as.character(FY24_Sept_KPIs_Total_Agency_1_[1,])
+FY24_Sept_KPIs_Total_Agency_1_ <- FY24_Sept_KPIs_Total_Agency_1_[-1, ]  # Remove the first row now that it's been set as column names
+
+rownames(FY24_Sept_KPIs_Total_Agency_1_)[12] <- "Sept" #rename to september
+FY24_Sept_KPIs_Total_Agency_1_ <- FY24_Sept_KPIs_Total_Agency_1_[, -19] #Remove column 18 because all values are 0
+FY24_Sept_KPIs_Total_Agency_1_ <- head(FY24_Sept_KPIs_Total_Agency_1_, -1)
 View(FY24_Sept_KPIs_Total_Agency_1_)
 ```
 
 ```{r KPI colnames}
-KPI_data <- FY24_Sept_KPIs_Total_Agency_1_  
+KPI_data <- as.data.frame(FY24_Sept_KPIs_Total_Agency_1_)
 
-colnames(KPI_data)[1] <- "Program"  
-
-colnames(KPI_data)[13] <- "Sept"
-
-colnames(KPI_data)[14] <- "Total"
+colnames(KPI_data) <- c("hs_enroll", "hs_goal_attendance", "hs_wl_inc_eli", "hs_wl_inc_over", "hs_97", "ehs_enroll", "ehs_goal_attendance", "ehs_wl_inc_eli", "ehs_wl_inc_over", "ehs_childcare_slots", "ehs_97", "usda_17_homes", "usda_7_centers", "pre_school_slots", "total_apps_received", "percent_apps_10_days", "avg_days_app_process", "total_children", "home_visit", "dental", "whole_family", "meals_provided", "meals_distributed")
+  
 
 View(KPI_data)  
 
@@ -239,7 +243,7 @@ KPIs_Total_Agency$month <- fct_relevel(KPIs_Total_Agency$month, "jan", "feb", "m
 data_waitlist_melted <- melt(KPIs_Total_Agency, id.vars = "month")
 
 # Stacked bar plot for Waitlist Income and Overload
-ggplot(data_waitlist_melted, aes(x = factor(month, levels = c("jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")), y = value, fill = variable)) +
+ggplot(data_waitlist_melted, na.rm = TRUE, aes(x = factor(month, levels = c("jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")), y = value, fill = variable)) +
 geom_bar(stat = "identity") +
 labs(title = "Waitlist Income and Overload", x = "Month", y = "Count") +
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
