@@ -148,7 +148,7 @@ town_data_total <- data.frame(
 library(tidyr)
 
 town_data_total <- data.frame(
-  Program = c("Headstart", "Headstart", "EHS", "EHS", "Nutrition", "Nutrition"),
+  Program = c("Headstart", "Headstart", "Early Headstart", "Early Headstart", "Nutrition", "Nutrition"),
   Type = c("Individuals", "Investments", "Individuals", "Investments", "Individuals", "Investments"),
   Total = c(
     sum(Town_data$Headstart_individuals),
@@ -171,36 +171,28 @@ print(town_data_total_long)
 ```
 ```{r town plots, investments and individuals}
 
+library(tidyr)
+library(ggplot2)
 library(scales)
 
+town_data_total_long$Program <- factor(town_data_total_long$Program, 
+                                       levels = c("Headstart", "Early Headstart", "Nutrition"))
 
-town_data_total_long$Program <- factor(town_data_total_long$Program, levels = c("Headstart", "EHS", "Nutrition"))
+individuals_plot <- ggplot(town_data_total_long[town_data_total_long$Type == "Individuals", ], 
+                           aes(x = Program, y = Value, fill = Program)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Individuals per Program", x = "Program", y = "Number of Individuals") +
+  theme_minimal()
 
-town_data_individuals <- town_data_total_long %>% filter(Type == "Individuals")
-town_data_investments <- town_data_total_long %>% filter(Type == "Investments")
+investments_plot <- ggplot(town_data_total_long[town_data_total_long$Type == "Investments", ], 
+                           aes(x = Program, y = Value, fill = Program)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Investments per Program", x = "Program", y = "Investment Value") +
+  scale_y_continuous(labels = label_comma()) +  
+  theme_minimal()
 
-
-ggplot(town_data_individuals, aes(x = Program, y = Value, fill = Program)) +
-  geom_bar(stat = "identity", show.legend = FALSE) +
-  labs(
-
-    title = "Total Individuals by Program",
-    x = "Program",
-    y = "Total Individuals"
-  ) +
-  theme_minimal() +
-  scale_fill_manual(values = c("Headstart" = "skyblue", "EHS" = "lightgreen", "Nutrition" = "orange"))
-
-ggplot(town_data_investments, aes(x = Program, y = Value, fill = Program)) +
-  geom_bar(stat = "identity", show.legend = FALSE) +
-  labs(
-    title = "Total Investments by Program",
-    x = "Program",
-    y = "Total Investments"
-  ) +
-  theme_minimal() +
-  scale_fill_manual(values = c("Headstart" = "skyblue", "EHS" = "lightgreen", "Nutrition" = "orange")) +
-  scale_y_continuous(labels = label_dollar(scale = 1))  
+individuals_plot
+investments_plot
 
 
 ```
