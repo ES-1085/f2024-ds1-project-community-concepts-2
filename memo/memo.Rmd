@@ -9,6 +9,7 @@ This document should contain a detailed account of the data clean up for your da
 ```{r load-packages, message = FALSE}
 library(tidyverse)
 library(broom)
+library(viridis)
 ```
 
 ## Data Clean Up Steps for Overall Data
@@ -47,14 +48,27 @@ ggsave("example-starwars-wide.png", width = 6, height = 4)
 
 
 
-### Plot 1: _________
+### Plot 1: __Meals Distributed by Month_______
 
 #### Data cleanup steps specific to plot 1
 
 These data cleaning sections are optional and depend on if you have some data cleaning steps specific to a particular plot
 
-```{r}
+```{r KPI_Nutrition_plot}
+KPI_data$month <- factor(rownames(KPI_data), 
+                         levels = c("Oct", "Nov", "Dec", "Jan", 
+                                    "Feb", "Mar", "Apr", "May", "June", 
+                                    "July", "Aug", "Sept"))
 
+
+
+ggplot(KPI_data, aes(x = month, y = meals_provided, fill = month)) +
+  geom_bar(stat = "identity") +
+  scale_fill_viridis_d() + 
+  labs(title = "Meals Provided by Month",
+       x = "Month",
+       y = "Number of Meals Provided") 
+ ggsave("KPI_Nutrition_Plot.png", width = 6, height = 4)
 ```
 
 
