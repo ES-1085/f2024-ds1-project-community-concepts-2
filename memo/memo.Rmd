@@ -54,21 +54,22 @@ ggsave("example-starwars-wide.png", width = 6, height = 4)
 
 These data cleaning sections are optional and depend on if you have some data cleaning steps specific to a particular plot
 
-```{r KPI_Nutrition_plot}
-KPI_data$month <- factor(rownames(KPI_data), 
-                         levels = c("Oct", "Nov", "Dec", "Jan", 
-                                    "Feb", "Mar", "Apr", "May", "June", 
-                                    "July", "Aug", "Sept"))
+```{r Clean_Total_Children}
 
 
+KPI_data["Nov", "total_children"]<- 339
+KPI_data["Dec", "total_children"]<- 341
+KPI_data["Jan", "total_children"]<- 346
+KPI_data["Feb", "total_children"]<- 364
+KPI_data["Mar", "total_children"]<- 449
+KPI_data["Apr", "total_children"]<- 452
+KPI_data["May", "total_children"]<- 525
+KPI_data["June", "total_children"]<- 525
+KPI_data["July", "total_children"]<- 525
+KPI_data["Aug", "total_children"]<- 525
+KPI_data["Sept", "total_children"]<- 525
 
-ggplot(KPI_data, aes(x = month, y = meals_provided, fill = month)) +
-  geom_bar(stat = "identity") +
-  scale_fill_viridis_d() + 
-  labs(title = "Meals Provided by Month",
-       x = "Month",
-       y = "Number of Meals Provided") 
- ggsave("KPI_Nutrition_Plot.png", width = 6, height = 4)
+  
 ```
 
 

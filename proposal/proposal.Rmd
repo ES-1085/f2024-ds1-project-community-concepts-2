@@ -244,23 +244,6 @@ scale_fill_manual(values = c("hs_wl_income" = "skyblue", "hs_wl_over" = "orange"
 ```
 
 
-```{r KPI-nutrition-plot}
-KPI_data$month <- factor(rownames(KPI_data), 
-                         levels = c("Oct", "Nov", "Dec", "Jan", 
-                                    "Feb", "Mar", "Apr", "May", "June", 
-                                    "July", "Aug", "Sept"))
-
-library(viridis)
-
-ggplot(KPI_data, aes(x = month, y = meals_provided, fill = month)) +
-  geom_bar(stat = "identity") +
-  scale_fill_viridis_d() + 
-  labs(title = "Meals Provided by Month",
-       x = "Month",
-       y = "Number of Meals Provided") 
- 
-```
-
 ## 3. Data analysis plan
 
 To effectively assess performance, we compare actual results against predefined goals across various Key Performance Indicators (KPIs). First, we prepare the data by creating a new column that calculates the percentage of the goal achieved, allowing for a standardized comparison across all metrics. Next, we visualize the data using bar plots or line charts to illustrate the differences between actual performance and target values, making it easier to identify trends and gaps. Finally, we conduct a statistical analysis to determine the average percentage of goal achievement, highlighting areas of strong performance as well as those that fall short. This approach provides a clear understanding of overall success while pinpointing specific areas that require strategic improvements.
