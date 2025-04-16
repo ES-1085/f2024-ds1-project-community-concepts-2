@@ -208,25 +208,82 @@ FY24_Sept_KPIs_Total_Agency_1_ <- read_excel("/cloud/project/data/FY24 Sept KPIs
         "numeric", "skip", "skip", "skip", 
         "skip", "skip", "skip", "skip", "skip", 
         "skip", "skip", "skip", "skip"))
-FY24_Sept_KPIs_Total_Agency_1_ <- t(FY24_Sept_KPIs_Total_Agency_1_)
-colnames(FY24_Sept_KPIs_Total_Agency_1_) <- as.character(FY24_Sept_KPIs_Total_Agency_1_[1,])
-FY24_Sept_KPIs_Total_Agency_1_ <- FY24_Sept_KPIs_Total_Agency_1_[-1, ]  # Remove the first row now that it's been set as column names
+FY24_Sept_KPIs_Total_Agency_1_ 
 
-rownames(FY24_Sept_KPIs_Total_Agency_1_)[12] <- "Sept" #rename to september
-FY24_Sept_KPIs_Total_Agency_1_ <- FY24_Sept_KPIs_Total_Agency_1_[, -19] #Remove column 18 because all values are 0
-FY24_Sept_KPIs_Total_Agency_1_ <- head(FY24_Sept_KPIs_Total_Agency_1_, -1)
-View(FY24_Sept_KPIs_Total_Agency_1_)
+
+# <- t(FY24_Sept_KPIs_Total_Agency_1_)
+# colnames(FY24_Sept_KPIs_Total_Agency_1_) <- as.character(FY24_Sept_KPIs_Total_Agency_1_[1,])
+# FY24_Sept_KPIs_Total_Agency_1_ <- FY24_Sept_KPIs_Total_Agency_1_[-1, ]  # Remove the first row now that it's been set as column names
+# 
+# rownames(FY24_Sept_KPIs_Total_Agency_1_)[12] <- "Sept" #rename to september
+# FY24_Sept_KPIs_Total_Agency_1_ <- FY24_Sept_KPIs_Total_Agency_1_[, -19] #Remove column 18 because all values are 0
+# FY24_Sept_KPIs_Total_Agency_1_ <- head(FY24_Sept_KPIs_Total_Agency_1_, -1)
+# View(FY24_Sept_KPIs_Total_Agency_1_)
+# 
+# library(readxl)
+# FY24_Sept_KPIs_Total_Agency_1_ <- read_excel("FY24 Sept KPIs - Total Agency (1).xlsx", 
+#     sheet = "Childrens ", col_types = c("text", 
+#         "numeric", "numeric", "numeric", 
+#         "numeric", "numeric", "numeric", 
+#         "numeric", "numeric", "numeric", 
+#         "numeric", "numeric", "numeric", 
+#         "numeric", "skip", "skip", "skip", 
+#         "skip", "skip", "skip", "skip", "skip", 
+#         "skip", "skip", "skip", "skip"))
+# View(FY24_Sept_KPIs_Total_Agency_1_)
 ```
 
 ```{r KPI colnames}
-KPI_data <- as.data.frame(FY24_Sept_KPIs_Total_Agency_1_)
+KPI_data <- FY24_Sept_KPIs_Total_Agency_1_  
 
-colnames(KPI_data) <- c("hs_enroll", "hs_goal_attendance", "hs_wl_inc_eli", "hs_wl_inc_over", "hs_97", "ehs_enroll", "ehs_goal_attendance", "ehs_wl_inc_eli", "ehs_wl_inc_over", "ehs_childcare_slots", "ehs_97", "usda_17_homes", "usda_7_centers", "pre_school_slots", "total_apps_received", "percent_apps_10_days", "avg_days_app_process", "total_children", "home_visit", "dental", "whole_family", "meals_provided", "meals_distributed")
-  
+colnames(KPI_data)[1] <- "Program"  
+
+colnames(KPI_data)[13] <- "Sept"
+
+colnames(KPI_data)[14] <- "Total"
 
 View(KPI_data)  
 
 ```
+
+```{r KPI enrollment plot}
+
+KPI_data <- as_tibble(KPI_data)
+
+KPI_enrollment <- KPI_data %>%
+  slice(2, 7)
+
+KPI_enrollment_long <- KPI_enrollment %>%
+  pivot_longer(cols = -Program, names_to  = "Month", values_to = "Enrollment") %>%
+  filter(!is.na(Enrollment)) %>%   # drop any empty cells
+  mutate(Month = factor(Month,levels = c("Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept")),
+    Program = recode(Program,
+      "HS Goal ≥ 90%   Attendance %"  = "Head Start",
+      "EHS Goal ≥ 90% Attendance %"   = "Early Head Start"))
+
+ggplot(KPI_enrollment_long,
+       aes(x = Month, y = Enrollment,
+           group = Program, color = Program)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  geom_hline(yintercept = 0.90,
+             linetype   = "solid",
+             color      = "red") +
+  scale_y_continuous(
+    labels = percent_format(accuracy = 1),
+    limits = c(0.5, 1.0)) +
+  labs(
+    title    = "Attendance Percentages vs 90% Goal",
+    subtitle = paste0(
+      "The percentage of attendance to Head Start and Early Head Start\n",
+      "programs by month, compared to CCI's 90% attendance goal (2024)"),
+    x = "Month",
+    y = "Enrollment Rate, Percent") +
+  theme_minimal()
+
+```
+
+
 
 ```{r KPI Plot}
 KPIs_Total_Agency$month <- fct_relevel(KPIs_Total_Agency$month, "jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")
