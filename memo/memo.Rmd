@@ -14,13 +14,125 @@ library(viridis)
 
 ## Data Clean Up Steps for Overall Data
 
-### Step 1: _________
+### Step 1: Town Column Cleaning
 
-```{r}
+
+```{r town column cleaning}
+Town_data <- FY24_Town_Campaign_Data_1_
+
+colnames(Town_data) <- as.character(unlist(Town_data[1, ]))
+Town_data <- Town_data[-1, ]
+Town_data <- Town_data[-(2:7), ]
+Town_data <- Town_data[, -2]
+ 
+ 
+colnames(Town_data)[2] <- "Headstart_individuals"
+colnames(Town_data)[3] <- "Headstart_investments"
+
+colnames(Town_data)[4] <- "EHS_individuals"
+colnames(Town_data)[5] <- "EHS_investments"
+
+colnames(Town_data)[6] <- "Nutrition_individuals"
+colnames(Town_data)[7] <- "Nutrition_investments"
+
+colnames(Town_data)[8] <- "Total"
 
 ```
 
-### Step 2: ________
+
+### Step 2: Delete zeros
+
+```{r town deleting zeros}
+
+
+Town_data[, c("Headstart_individuals", "Headstart_investments", 
+              "EHS_individuals", "EHS_investments", 
+              "Nutrition_individuals", "Nutrition_investments")] <- 
+  lapply(Town_data[, c("Headstart_individuals", "Headstart_investments", 
+                       "EHS_individuals", "EHS_investments", 
+                       "Nutrition_individuals", "Nutrition_investments")], 
+         function(x) replace(x, is.na(x), 0))
+
+Town_data[, c("Headstart_individuals", "Headstart_investments",
+              "EHS_individuals", "EHS_investments",
+              "Nutrition_individuals", "Nutrition_investments")] <-
+  lapply(Town_data[, c("Headstart_individuals", "Headstart_investments",
+                       "EHS_individuals", "EHS_investments",
+                       "Nutrition_individuals", "Nutrition_investments")], as.numeric)
+
+Town_data <- Town_data[rowSums(Town_data[, c("Headstart_individuals", "Headstart_investments",
+                                              "EHS_individuals", "EHS_investments",
+                                              "Nutrition_individuals", "Nutrition_investments")]) != 0, ]
+
+Town_data <- Town_data[-c(1, nrow(Town_data)), ]
+
+```
+
+### Step #3 Create town totals
+
+```{r town totals sheet}
+
+headstart_individuals_total <- sum(Town_data$Headstart_individuals)
+headstart_investments_total <- sum(Town_data$Headstart_investments)
+
+ehs_individuals_total <- sum(Town_data$EHS_individuals)
+ehs_investments_total <- sum(Town_data$EHS_investments)
+
+nutrition_individuals_total <- sum(Town_data$Nutrition_individuals)
+nutrition_investments_total <- sum(Town_data$Nutrition_investments)
+
+town_data_total <- data.frame(
+  Headstart_individuals = headstart_individuals_total,
+  Headstart_investments = headstart_investments_total,
+  EHS_individuals = ehs_individuals_total,
+  EHS_investments = ehs_investments_total,
+  Nutrition_individuals = nutrition_individuals_total,
+  Nutrition_investments = nutrition_investments_total
+)
+
+
+library(tidyr)
+
+town_data_total <- data.frame(
+  Program = c("Headstart", "Headstart", "Early Headstart", "Early Headstart", "Nutrition", "Nutrition"),
+  Type = c("Individuals", "Investments", "Individuals", "Investments", "Individuals", "Investments"),
+  Total = c(
+    sum(Town_data$Headstart_individuals),
+    sum(Town_data$Headstart_investments),
+    sum(Town_data$EHS_individuals),
+    sum(Town_data$EHS_investments),
+    sum(Town_data$Nutrition_individuals),
+    sum(Town_data$Nutrition_investments)
+  )
+)
+
+town_data_total_long <- pivot_longer(town_data_total, 
+                                     cols = c("Total"), 
+                                     names_to = "Metric", 
+                                     values_to = "Value")
+
+print(town_data_total_long)
+
+
+```
+
+### Step 4: Create Columns for KPI dataset
+
+```{r KPI colnames}
+KPI_data <- FY24_Sept_KPIs_Total_Agency_1_  
+
+colnames(KPI_data)[1] <- "Program"  
+
+colnames(KPI_data)[13] <- "Sept"
+
+colnames(KPI_data)[14] <- "Total"
+
+View(KPI_data)  
+
+```
+
+
+
 
 ## Plots
 
@@ -48,41 +160,79 @@ ggsave("example-starwars-wide.png", width = 6, height = 4)
 
 
 
-### Plot 1: __Meals Distributed by Month_______
-
-#### Data cleanup steps specific to plot 1
-
-These data cleaning sections are optional and depend on if you have some data cleaning steps specific to a particular plot
-
-```{r Clean_Total_Children}
+### Plot 1 and 2: Town Totals: Investments and Invidiviuals
 
 
-KPI_data["Nov", "total_children"]<- 339
-KPI_data["Dec", "total_children"]<- 341
-KPI_data["Jan", "total_children"]<- 346
-KPI_data["Feb", "total_children"]<- 364
-KPI_data["Mar", "total_children"]<- 449
-KPI_data["Apr", "total_children"]<- 452
-KPI_data["May", "total_children"]<- 525
-KPI_data["June", "total_children"]<- 525
-KPI_data["July", "total_children"]<- 525
-KPI_data["Aug", "total_children"]<- 525
-KPI_data["Sept", "total_children"]<- 525
+#### Final Plot 1 and 2
 
-  
+
+```{r town plots, investments and individuals}
+
+library(tidyr)
+library(ggplot2)
+library(scales)
+
+town_data_total_long$Program <- factor(town_data_total_long$Program, 
+                                       levels = c("Headstart", "Early Headstart", "Nutrition"))
+
+individuals_plot <- ggplot(town_data_total_long[town_data_total_long$Type == "Individuals", ], 
+                           aes(x = Program, y = Value, fill = Program)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Individuals per Program", x = "Program", y = "Number of Individuals") +
+  theme_minimal()
+
+investments_plot <- ggplot(town_data_total_long[town_data_total_long$Type == "Investments", ], 
+                           aes(x = Program, y = Value, fill = Program)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Investments per Program", x = "Program", y = "Investment Value") +
+  scale_y_continuous(labels = label_comma()) +  
+  theme_minimal()
+
+individuals_plot
+investments_plot
+
+
 ```
 
 
-#### Final Plot 1
+### Plot 3: KPI Enrollment goals and actual Enrollment
 
-```{r}
+```{r KPI enrollment plot}
+
+KPI_data <- as_tibble(KPI_data)
+
+KPI_enrollment <- KPI_data %>%
+  slice(2, 7)
+
+KPI_enrollment_long <- KPI_enrollment %>%
+  pivot_longer(cols = -Program, names_to  = "Month", values_to = "Enrollment") %>%
+  filter(!is.na(Enrollment)) %>%   # drop any empty cells
+  mutate(Month = factor(Month,levels = c("Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept")),
+    Program = recode(Program,
+      "HS Goal ≥ 90%   Attendance %"  = "Head Start",
+      "EHS Goal ≥ 90% Attendance %"   = "Early Head Start"))
+
+ggplot(KPI_enrollment_long,
+       aes(x = Month, y = Enrollment,
+           group = Program, color = Program)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  geom_hline(yintercept = 0.90,
+             linetype   = "solid",
+             color      = "red") +
+  scale_y_continuous(
+    labels = percent_format(accuracy = 1),
+    limits = c(0.5, 1.0)) +
+  labs(
+    title    = "Attendance Percentages vs 90% Goal",
+    subtitle = paste0(
+      "The percentage of attendance to Head Start and Early Head Start\n",
+      "programs by month, compared to CCI's 90% attendance goal (2024)"),
+    x = "Month",
+    y = "Enrollment Rate, Percent") +
+  theme_minimal()
 
 ```
-
-
-### Plot 2: _________
-
-### Plot 3: ___________
 
 Add more plot sections as needed. Each project should have at least 3 plots, but talk to me if you have fewer than 3.
 
