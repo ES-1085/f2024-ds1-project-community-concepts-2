@@ -68,7 +68,7 @@ Town_data <- Town_data[-c(1, nrow(Town_data)), ]
 
 ```
 
-### Step #3 Create town totals
+### Step 3 Create town totals
 
 ```{r town totals sheet}
 
@@ -195,7 +195,7 @@ investments_plot
 ```
 
 
-### Plot 3: KPI Attendance goals Vs. actual Attendance
+### Plot 3: KPI Attendance Goals Vs. Actual Attendance
 
 ```{r KPI enrollment plot}
 
@@ -211,6 +211,7 @@ KPI_enrollment_long <- KPI_enrollment %>%
     Program = recode(Program,
       "HS Goal ≥ 90%   Attendance %"  = "Head Start",
       "EHS Goal ≥ 90% Attendance %"   = "Early Head Start"))
+KPI_enrollment_long <- KPI_enrollment_long[-c(13, 26), ]
 
 ggplot(KPI_enrollment_long,
        aes(x = Month, y = Enrollment,
