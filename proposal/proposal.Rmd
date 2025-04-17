@@ -169,33 +169,7 @@ print(town_data_total_long)
 
 
 ```
-```{r town plots, investments and individuals}
 
-library(tidyr)
-library(ggplot2)
-library(scales)
-
-town_data_total_long$Program <- factor(town_data_total_long$Program, 
-                                       levels = c("Headstart", "Early Headstart", "Nutrition"))
-
-individuals_plot <- ggplot(town_data_total_long[town_data_total_long$Type == "Individuals", ], 
-                           aes(x = Program, y = Value, fill = Program)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Individuals per Program", x = "Program", y = "Number of Individuals") +
-  theme_minimal()
-
-investments_plot <- ggplot(town_data_total_long[town_data_total_long$Type == "Investments", ], 
-                           aes(x = Program, y = Value, fill = Program)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Investments per Program", x = "Program", y = "Investment Value") +
-  scale_y_continuous(labels = label_comma()) +  
-  theme_minimal()
-
-individuals_plot
-investments_plot
-
-
-```
 
 ```{r KPI Import}
 library(readxl)
@@ -246,59 +220,6 @@ View(KPI_data)
 
 ```
 
-```{r KPI enrollment plot}
-
-KPI_data <- as_tibble(KPI_data)
-
-KPI_enrollment <- KPI_data %>%
-  slice(2, 7)
-
-KPI_enrollment_long <- KPI_enrollment %>%
-  pivot_longer(cols = -Program, names_to  = "Month", values_to = "Enrollment") %>%
-  filter(!is.na(Enrollment)) %>%   # drop any empty cells
-  mutate(Month = factor(Month,levels = c("Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept")),
-    Program = recode(Program,
-      "HS Goal ≥ 90%   Attendance %"  = "Head Start",
-      "EHS Goal ≥ 90% Attendance %"   = "Early Head Start"))
-
-ggplot(KPI_enrollment_long,
-       aes(x = Month, y = Enrollment,
-           group = Program, color = Program)) +
-  geom_line(size = 1.2) +
-  geom_point(size = 2) +
-  geom_hline(yintercept = 0.90,
-             linetype   = "solid",
-             color      = "red") +
-  scale_y_continuous(
-    labels = percent_format(accuracy = 1),
-    limits = c(0.5, 1.0)) +
-  labs(
-    title    = "Attendance Percentages vs 90% Goal",
-    subtitle = paste0(
-      "The percentage of attendance to Head Start and Early Head Start\n",
-      "programs by month, compared to CCI's 90% attendance goal (2024)"),
-    x = "Month",
-    y = "Enrollment Rate, Percent") +
-  theme_minimal()
-
-```
-
-
-
-```{r KPI Plot}
-KPIs_Total_Agency$month <- fct_relevel(KPIs_Total_Agency$month, "jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")
-
-# Reshape data for stacked bar plot
-data_waitlist_melted <- melt(KPIs_Total_Agency, id.vars = "month")
-
-# Stacked bar plot for Waitlist Income and Overload
-ggplot(data_waitlist_melted, na.rm = TRUE, aes(x = factor(month, levels = c("jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")), y = value, fill = variable)) +
-geom_bar(stat = "identity") +
-labs(title = "Waitlist Income and Overload", x = "Month", y = "Count") +
-theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-scale_fill_manual(values = c("hs_wl_income" = "skyblue", "hs_wl_over" = "orange", "ehs_wl_income" = "lightgreen", "ehs_wl_over" = "red"),
-    labels = c("HS Wait List for Income Eligible", "HS Wait List for Over Income", "Early HS Wait List for Income Eligible", "Early HS Wait List for Over Income"))# Custom legend labels
-```
 
 
 ## 3. Data analysis plan

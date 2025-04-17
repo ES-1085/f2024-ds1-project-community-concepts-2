@@ -195,7 +195,7 @@ investments_plot
 ```
 
 
-### Plot 3: KPI Enrollment goals and actual Enrollment
+### Plot 3: KPI Attendance goals Vs. actual Attendance
 
 ```{r KPI enrollment plot}
 
@@ -233,8 +233,20 @@ ggplot(KPI_enrollment_long,
   theme_minimal()
 
 ```
+### Plot 4: KPI Waitlist Plot
 
-Add more plot sections as needed. Each project should have at least 3 plots, but talk to me if you have fewer than 3.
+```{r KPI Plot}
+KPIs_Total_Agency$month <- fct_relevel(KPIs_Total_Agency$month, "jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")
 
-### Plot 4: ___________ 
+# Reshape data for stacked bar plot
+data_waitlist_melted <- melt(KPIs_Total_Agency, id.vars = "month")
+
+# Stacked bar plot for Waitlist Income and Overload
+ggplot(data_waitlist_melted, na.rm = TRUE, aes(x = factor(month, levels = c("jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")), y = value, fill = variable)) +
+geom_bar(stat = "identity") +
+labs(title = "Waitlist Income and Overload", x = "Month", y = "Count") +
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+scale_fill_manual(values = c("hs_wl_income" = "skyblue", "hs_wl_over" = "orange", "ehs_wl_income" = "lightgreen", "ehs_wl_over" = "red"),
+    labels = c("HS Wait List for Income Eligible", "HS Wait List for Over Income", "Early HS Wait List for Income Eligible", "Early HS Wait List for Over Income"))# Custom legend labels
+```
 
