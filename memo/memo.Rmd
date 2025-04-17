@@ -1,6 +1,6 @@
 ---
 title: "Project memo"
-author: "Team name"
+author: "Community Concepts 2"
 output: github_document
 ---
 
@@ -206,7 +206,7 @@ KPI_enrollment <- KPI_data %>%
 
 KPI_enrollment_long <- KPI_enrollment %>%
   pivot_longer(cols = -Program, names_to  = "Month", values_to = "Enrollment") %>%
-  filter(!is.na(Enrollment)) %>%   # drop any empty cells
+  filter(!is.na(Enrollment)) %>%  
   mutate(Month = factor(Month,levels = c("Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept")),
     Program = recode(Program,
       "HS Goal ≥ 90%   Attendance %"  = "Head Start",

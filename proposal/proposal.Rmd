@@ -184,27 +184,6 @@ FY24_Sept_KPIs_Total_Agency_1_ <- read_excel("/cloud/project/data/FY24 Sept KPIs
         "skip", "skip", "skip", "skip"))
 FY24_Sept_KPIs_Total_Agency_1_ 
 
-
-# <- t(FY24_Sept_KPIs_Total_Agency_1_)
-# colnames(FY24_Sept_KPIs_Total_Agency_1_) <- as.character(FY24_Sept_KPIs_Total_Agency_1_[1,])
-# FY24_Sept_KPIs_Total_Agency_1_ <- FY24_Sept_KPIs_Total_Agency_1_[-1, ]  # Remove the first row now that it's been set as column names
-# 
-# rownames(FY24_Sept_KPIs_Total_Agency_1_)[12] <- "Sept" #rename to september
-# FY24_Sept_KPIs_Total_Agency_1_ <- FY24_Sept_KPIs_Total_Agency_1_[, -19] #Remove column 18 because all values are 0
-# FY24_Sept_KPIs_Total_Agency_1_ <- head(FY24_Sept_KPIs_Total_Agency_1_, -1)
-# View(FY24_Sept_KPIs_Total_Agency_1_)
-# 
-# library(readxl)
-# FY24_Sept_KPIs_Total_Agency_1_ <- read_excel("FY24 Sept KPIs - Total Agency (1).xlsx", 
-#     sheet = "Childrens ", col_types = c("text", 
-#         "numeric", "numeric", "numeric", 
-#         "numeric", "numeric", "numeric", 
-#         "numeric", "numeric", "numeric", 
-#         "numeric", "numeric", "numeric", 
-#         "numeric", "skip", "skip", "skip", 
-#         "skip", "skip", "skip", "skip", "skip", 
-#         "skip", "skip", "skip", "skip"))
-# View(FY24_Sept_KPIs_Total_Agency_1_)
 ```
 
 ```{r KPI colnames}
