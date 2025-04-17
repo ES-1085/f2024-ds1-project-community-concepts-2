@@ -237,13 +237,13 @@ ggplot(KPI_enrollment_long,
 ### Plot 4: KPI Waitlist Plot
 
 ```{r KPI Plot}
-KPIs_Total_Agency$month <- fct_relevel(KPIs_Total_Agency$month, "jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")
+KPIs_Total_Agency$month <- fct_relevel(KPIs_Total_Agency$month, "October", "November", "December", "January", "February", "March","April", "May", "June", "July", "August", "September")
 
 # Reshape data for stacked bar plot
 data_waitlist_melted <- melt(KPIs_Total_Agency, id.vars = "month")
 
 # Stacked bar plot for Waitlist Income and Overload
-ggplot(data_waitlist_melted, na.rm = TRUE, aes(x = factor(month, levels = c("jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec")), y = value, fill = variable)) +
+ggplot(data_waitlist_melted, na.rm = TRUE, aes(x = factor(month, levels = c("October", "November", "December", "January", "February", "March", "April", "May", "June", "July", "August", "September")), y = value, fill = variable)) +
 geom_bar(stat = "identity") +
 labs(title = "Waitlist Income and Overload", x = "Month", y = "Count") +
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
